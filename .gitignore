@@ -1,0 +1,4 @@
+.vscode/
+*.exe
+image2Base64*
+file2Base64*
