@@ -28,9 +28,9 @@ func main() {
 		os.Exit(0)
 	}
 
-	flag.CommandLine.Parse(os.Args[2:])
 	if len(os.Args) > 1 {
 		inputFile = os.Args[1]
+		flag.CommandLine.Parse(os.Args[2:])
 	}
 
 	if inputFile == "" {
