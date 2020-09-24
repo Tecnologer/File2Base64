@@ -1,7 +1,6 @@
 binName=file2Base64
 binFolder=dist
 version=`git describe --tags`
-beta=
 arch=amd64
 
 all:
