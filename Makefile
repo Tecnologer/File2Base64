@@ -1,6 +1,8 @@
 binName=file2Base64
-formatVersion=+.%Y%m
+binFolder=dist
 version=`git describe --tags`
+beta=
+arch=amd64
 
 all:
 	make windows
@@ -8,10 +10,10 @@ all:
 	make darwin
 
 windows:
-	GOOS=windows go build -ldflags "-X main.minversion=`date -u $(formatVersion)` -X main.version=$(version)" -o "$(binName).exe"
+	GOOS=windows GOARCH=$(arch) go build -ldflags "-X main.version=$(version)" -o "$(binFolder)/$(binName)-$(arch).exe"
 
 linux:
-	GOOS=linux go build -ldflags "-X main.minversion=`date -u $(formatVersion)` -X main.version=$(version)" -o linux-$(binName)
+	GOOS=linux GOARCH=$(arch) go build -ldflags "-X main.version=$(version)" -o "$(binFolder)/linux-$(binName)-$(arch)"
 
 darwin:
-	GOOS=darwin go build -ldflags "-X main.minversion=`date -u $(formatVersion)` -X main.version=$(version)" -o darwin-$(binName)
+	GOOS=darwin GOARCH=$(arch) go build -ldflags "-X main.version=$(version)" -o "$(binFolder)/darwin-$(binName)-$(arch)"
