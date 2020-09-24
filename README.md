@@ -12,6 +12,21 @@ Converts any type of file to base64 string.
 * `-v`: Flag to indicate if the result will be also printed on the console when the output file is specified. _(optional, default: true)_
 * `-version`: Shows the current version of binary. _(optional)_
 
+## Install 
+
+Install on $GOBIN
+
+### From Code
+
+`make install`
+
+### From Releases
+
+- [Download][2] the version for your OS
+- Copy the binary to $GOBIN
+
+__NOTE:__ Don't forget add $GOBIN to $PATH.
+
 ## Build
 
 * With Makefile: `make <OS>`, where `<OS>` can be any of the following options:
@@ -28,3 +43,4 @@ Converts any type of file to base64 string.
   - `go build -ldflags "-X main.version=0.0.1" -o "output_path[.exe]"`
 
   [1]: https://golang.org/doc/install/source
+  [2]: https://github.com/Tecnologer/File2Base64/releases
