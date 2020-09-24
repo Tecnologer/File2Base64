@@ -13,16 +13,22 @@ import (
 )
 
 var (
-	// inputFile     = flag.String("input", "", "Path of the file")
-	minversion    string
+	version       string
 	inputFile     string
-	outputFile    = flag.String("output", "", "Path of the output file")
-	outputConsole = flag.Bool("console", false, "Flag to indicate if the result will be also printed on the console when the output file is specified")
-	withType      = flag.Bool("with-type", true, "Flag to indicate if the result will include the type of the file. I.e.: data:image/png;base64,<enconded>")
+	outputFile    = flag.String("o", "", "Path of the output file")
+	outputConsole = flag.Bool("v", false, "Flag to indicate if the result will be also printed on the console when the output file is specified")
+	withType      = flag.Bool("t", true, "Flag to indicate if the result will include the type of the file. I.e.: data:image/png;base64,<enconded>")
+	showVersion   = flag.Bool("version", false, "Show the current version of bin")
 )
 
 func main() {
+	flag.Parse()
+	if *showVersion {
+		fmt.Printf("v%s\n", version)
+		os.Exit(0)
+	}
 
+	flag.CommandLine.Parse(os.Args[2:])
 	if len(os.Args) > 1 {
 		inputFile = os.Args[1]
 	}
@@ -32,8 +38,6 @@ func main() {
 		flag.PrintDefaults()
 		return
 	}
-
-	flag.Parse()
 
 	f, err := os.Open(inputFile)
 	if err != nil {
