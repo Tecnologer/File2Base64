@@ -19,6 +19,7 @@ var (
 	outputConsole = flag.Bool("v", false, "Flag to indicate if the result will be also printed on the console when the output file is specified")
 	withType      = flag.Bool("t", true, "Flag to indicate if the result will include the type of the file. I.e.: data:image/png;base64,<enconded>")
 	showVersion   = flag.Bool("version", false, "Show the current version of bin")
+	isDecode      = flag.Bool("d", false, "Convert base64 to original the file")
 )
 
 func main() {
@@ -39,17 +40,19 @@ func main() {
 		return
 	}
 
-	f, err := os.Open(inputFile)
-	if err != nil {
-		panic(err)
+	if *isDecode {
+		decode()
+	} else {
+		encode()
 	}
-	defer f.Close()
-	reader := bufio.NewReader(f)
+}
 
-	content, err := ioutil.ReadAll(reader)
+func encode() {
+	content, err := getFileContent()
 	if err != nil {
 		panic(err)
 	}
+
 	contentType := http.DetectContentType(content)
 	encoded := base64.StdEncoding.EncodeToString(content)
 
@@ -59,22 +62,39 @@ func main() {
 
 	errorWritting := false
 	if *outputFile != "" {
-		fOut, err := os.Create(*outputFile)
-		if err != nil {
-			logrus.Errorf("trying create the result file. Error: %v\n", err)
-			errorWritting = true
-			return
-		}
-		defer fOut.Close()
-		_, err = fOut.Write([]byte(encoded))
-		if err != nil {
-			logrus.Errorf("trying to write the result. Error: %v\n", err)
-			errorWritting = true
-			return
-		}
+		err := writeFile([]byte(content))
+		errorWritting = err != nil
 	}
 
 	if *outputFile == "" || errorWritting || *outputConsole {
 		fmt.Println(encoded)
 	}
+}
+
+func getFileContent() ([]byte, error) {
+	f, err := os.Open(inputFile)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+	reader := bufio.NewReader(f)
+
+	return ioutil.ReadAll(reader)
+}
+
+func writeFile(data []byte) error {
+	fOut, err := os.Create(*outputFile)
+	if err != nil {
+		logrus.Errorf("trying create the result file. Error: %v\n", err)
+		return err
+	}
+
+	defer fOut.Close()
+	_, err = fOut.Write(data)
+	if err != nil {
+		logrus.Errorf("trying to write the result. Error: %v\n", err)
+		return err
+	}
+
+	return nil
 }
